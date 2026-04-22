@@ -76,6 +76,7 @@ select:focus {
   display: grid;
   grid-template-columns: minmax(340px, 470px) minmax(420px, 1fr);
   gap: 24px;
+  align-items: start;
 }
 
 .panel {
