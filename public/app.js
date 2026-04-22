@@ -9,6 +9,13 @@ const formMessage = document.getElementById("form-message");
 const expensesList = document.getElementById("expenses-list");
 const balancesList = document.getElementById("balances-list");
 const settlementsList = document.getElementById("settlements-list");
+const payerUserIdInput = document.querySelector('input[name="payerUserId"]');
+const payerNameInput = document.querySelector('input[name="payerName"]');
+
+const defaultParticipants = [
+  { userId: "u1", name: "Aisha" },
+  { userId: "u2", name: "Rahul" },
+];
 
 const createParticipantRow = (participant = {}) => {
   const row = participantTemplate.content.firstElementChild.cloneNode(true);
@@ -34,6 +41,23 @@ const getParticipants = () =>
     name: row.querySelector('[data-field="name"]').value.trim(),
   }));
 
+const syncDefaultPayer = () => {
+  const participants = getParticipants().filter((participant) => participant.userId && participant.name);
+  const firstParticipant = participants[0];
+
+  if (!firstParticipant) {
+    return;
+  }
+
+  if (!payerUserIdInput.value.trim()) {
+    payerUserIdInput.value = firstParticipant.userId;
+  }
+
+  if (!payerNameInput.value.trim()) {
+    payerNameInput.value = firstParticipant.name;
+  }
+};
+
 const syncSplitRows = () => {
   const participants = getParticipants().filter((participant) => participant.userId && participant.name);
   const existingAmounts = new Map(
@@ -52,6 +76,8 @@ const syncSplitRows = () => {
     row.querySelector('[data-field="amount"]').value = existingAmounts.get(participant.userId) || "";
     splitsList.appendChild(row);
   });
+
+  syncDefaultPayer();
 };
 
 const setMessage = (message, type = "") => {
@@ -67,8 +93,7 @@ const apiRequest = async (url, options = {}) => {
     },
     ...options,
   });
-
-  const body = await response.json();
+  const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(body.message || "Request failed");
@@ -163,6 +188,16 @@ const loadDashboard = async () => {
   renderSettlements(settlementsResponse.data);
 };
 
+const resetExpenseForm = () => {
+  expenseForm.reset();
+  participantsList.innerHTML = "";
+  defaultParticipants.forEach((participant) => createParticipantRow(participant));
+  splitTypeSelect.value = "equal";
+  splitsSection.hidden = true;
+  payerUserIdInput.value = defaultParticipants[0].userId;
+  payerNameInput.value = defaultParticipants[0].name;
+};
+
 expenseForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("");
@@ -197,11 +232,7 @@ expenseForm.addEventListener("submit", async (event) => {
       body: JSON.stringify(payload),
     });
 
-    expenseForm.reset();
-    participantsList.innerHTML = "";
-    createParticipantRow({ userId: "u1", name: "Aisha" });
-    createParticipantRow({ userId: "u2", name: "Rahul" });
-    splitsSection.hidden = true;
+    resetExpenseForm();
     setMessage("Expense created successfully.", "success");
     await loadDashboard();
   } catch (error) {
@@ -217,7 +248,13 @@ splitTypeSelect.addEventListener("change", (event) => {
 document.getElementById("add-participant-btn").addEventListener("click", () => createParticipantRow());
 document.getElementById("refresh-btn").addEventListener("click", () => loadDashboard());
 
-createParticipantRow({ userId: "u1", name: "Aisha" });
+resetExpenseForm();
+loadDashboard().catch((error) => {
+  renderExpenses([]);
+  renderBalances([]);
+  renderSettlements([]);
+  setMessage(error.message, "error");
+});
 createParticipantRow({ userId: "u2", name: "Rahul" });
 loadDashboard().catch((error) => {
   setMessage(error.message, "error");
