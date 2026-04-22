@@ -159,7 +159,7 @@ Then a greedy two-pointer approach matches the largest debtor with the largest c
 npm install
 ```
 
-2. Create `.env` from `.env.example` and add your MongoDB connection string:
+
 
 ```env
 PORT=5000

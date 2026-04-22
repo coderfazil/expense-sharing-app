@@ -170,7 +170,7 @@ const ExpenseForm = ({ onSubmit, submitting }) => {
     <section className="panel form-panel">
       <div className="panel-heading">
         <p className="eyebrow">Smart Expense Sharing</p>
-        <h1>Track shared expenses with a React frontend and an Express API.</h1>
+        <h1>Track shared expenses.</h1>
       </div>
 
       <form className="expense-form" onSubmit={handleSubmit}>
