@@ -1,13 +1,13 @@
 # Smart Expense Sharing Application
 
-A small Splitwise-inspired MERN-style assignment focused on backend design, split validation, balance aggregation, and settlement optimization.
+A Splitwise-inspired MERN-style assignment focused on backend design, split validation, balance aggregation, and settlement optimization.
 
 ## Tech Stack
 
 - Node.js
 - Express.js
 - MongoDB with Mongoose
-- Vanilla HTML/CSS/JavaScript for the demo UI
+- React with Vite for the frontend
 - `node:test` for service-level tests
 
 ## Features
@@ -39,7 +39,8 @@ src/
   routes/        API routes
   services/      expense logic and settlement logic
   utils/         shared helpers
-public/          minimal frontend to demonstrate flows
+client/          React frontend source
+client-dist/     production frontend build
 test/            service-level tests
 ```
 
@@ -165,16 +166,21 @@ PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/expense-sharing-app
 ```
 
-3. Start the app:
+3. Start the app in development:
 
 ```bash
 npm run dev
 ```
 
+This starts:
+
+- Express API on `http://localhost:5000`
+- React frontend on `http://localhost:5173`
+
 4. Open:
 
 ```text
-http://localhost:5000
+http://localhost:5173
 ```
 
 ## Test Command
@@ -182,6 +188,15 @@ http://localhost:5000
 ```bash
 npm test
 ```
+
+## Production Build
+
+```bash
+npm run build
+npm start
+```
+
+In production, Express serves the built React app from `client-dist/`.
 
 ## Demo Walkthrough Checklist
 
@@ -197,5 +212,5 @@ For the submission video, demonstrate:
 
 ## Notes
 
-- The frontend is intentionally lightweight because the assignment prioritizes business logic.
+- The frontend is intentionally lightweight because the assignment prioritizes business logic, but it is implemented in React and connected to the Express APIs.
 - The current project does not include authentication or a separate user module because they were outside the task scope.

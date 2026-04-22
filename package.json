@@ -4,7 +4,10 @@
   "description": "Smart expense sharing application inspired by Splitwise",
   "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch src/server.js",
+    "dev": "concurrently \"node --watch src/server.js\" \"vite\"",
+    "dev:server": "node --watch src/server.js",
+    "dev:client": "vite",
+    "build": "vite build",
     "start": "node src/server.js",
     "test": "node --test"
   },
@@ -12,10 +15,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^9.2.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.5.0",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "vite": "^8.0.9"
   }
 }
