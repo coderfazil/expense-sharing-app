@@ -112,10 +112,19 @@ select:focus {
 .data-panel,
 .stack,
 .data-block,
-.card-list,
-.form-panel {
+.card-list {
   display: grid;
   gap: 16px;
+}
+
+.form-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.panel-heading {
+  display: grid;
+  gap: 4px;
 }
 
 .grid {
