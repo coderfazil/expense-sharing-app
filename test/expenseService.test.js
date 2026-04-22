@@ -49,3 +49,65 @@ test("unequal split rejects totals that do not match the expense amount", () => 
     /must exactly match/
   );
 });
+
+test("payer must be included in participants", () => {
+  assert.throws(
+    () =>
+      expenseService.validateExpensePayload({
+        title: "Lunch",
+        amount: "45",
+        splitType: "equal",
+        payer: { userId: "u9", name: "Kiran" },
+        participants: [
+          { userId: "u1", name: "Aisha" },
+          { userId: "u2", name: "Rahul" },
+        ],
+      }),
+    /payer must be included/
+  );
+});
+
+test("participants must be unique", () => {
+  assert.throws(
+    () =>
+      expenseService.validateExpensePayload({
+        title: "Groceries",
+        amount: "80",
+        splitType: "equal",
+        payer: { userId: "u1", name: "Aisha" },
+        participants: [
+          { userId: "u1", name: "Aisha" },
+          { userId: "u1", name: "Aisha" },
+        ],
+      }),
+    /Duplicate participant/
+  );
+});
+
+test("unequal split requires an amount for every participant", () => {
+  assert.throws(
+    () =>
+      expenseService.validateExpensePayload({
+        title: "Stay",
+        amount: "150",
+        splitType: "unequal",
+        payer: { userId: "u1", name: "Aisha" },
+        participants: [
+          { userId: "u1", name: "Aisha" },
+          { userId: "u2", name: "Rahul" },
+          { userId: "u3", name: "Meera" },
+        ],
+        splits: [
+          {
+            participant: { userId: "u1", name: "Aisha" },
+            amount: "50",
+          },
+          {
+            participant: { userId: "u2", name: "Rahul" },
+            amount: "50",
+          },
+        ],
+      }),
+    /must include an amount for every participant/
+  );
+});
